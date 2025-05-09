@@ -34,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        preferenceManager = new PreferenceManager(getApplicationContext());
         loadUserDetails();
         getToken();
         setListeners();
@@ -50,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showToast(String message) {
-        Toast.makeText(getApplicationContext(), "Sign out", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
     }
 
     private void getToken() {
@@ -75,13 +76,30 @@ public class MainActivity extends AppCompatActivity {
                 database.collection(Constants.KEY_COLLECTION_USERS).document(
                         preferenceManager.getString(Constants.KEY_USER_ID)
                 );
-        HashMap<String, Object> updates = new HashMap<>();
-        documentReference.update(updates)
-                .addOnSuccessListener(unused -> {
-                        preferenceManager.clear();
-                        startActivity(new Intent(getApplicationContext(), SignInActivity.class));
-                        finish();
-                })
-                .addOnFailureListener(e -> showToast("Unable to sign out"));
+
+        documentReference.get().addOnSuccessListener(documentSnapshot -> {
+            if (documentSnapshot.exists()) {
+                // Nếu document tồn tại, xóa FCM token
+                HashMap<String, Object> updates = new HashMap<>();
+                updates.put(Constants.KEY_FCM_TOKEN, com.google.firebase.firestore.FieldValue.delete());
+                documentReference.update(updates)
+                        .addOnSuccessListener(unused -> {
+                            proceedToSignIn();
+                        })
+                        .addOnFailureListener(e -> showToast("Unable to sign out: " + e.getMessage()));
+            } else {
+                // Nếu document không tồn tại (đã bị xóa trên Firestore)
+                proceedToSignIn(); // Vẫn cho đăng xuất
+            }
+        }).addOnFailureListener(e -> showToast("Error checking user: " + e.getMessage()));
     }
+
+    private void proceedToSignIn() {
+        preferenceManager.clear();
+        Intent intent = new Intent(getApplicationContext(), SignInActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
+    }
+
 }
