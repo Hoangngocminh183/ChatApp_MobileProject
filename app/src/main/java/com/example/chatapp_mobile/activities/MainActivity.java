@@ -27,7 +27,7 @@ import java.util.HashMap;
 public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
-    private PreferenceManager preferenceManager;
+    private  PreferenceManager preferenceManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
