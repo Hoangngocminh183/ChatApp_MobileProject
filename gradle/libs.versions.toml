@@ -13,6 +13,7 @@ roundedimageview = "2.3.0"
 firebaseMessaging = "24.1.0"
 firebaseFirestore = "25.1.2"
 multidex = "2.0.1"
+retrofit = "2.9.0" # Added Retrofit version
 
 [libraries]
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -25,11 +26,13 @@ constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayo
 sdp-android = { group = "com.intuit.sdp", name = "sdp-android", version.ref = "sdp" }
 ssp-android = { group = "com.intuit.ssp", name = "ssp-android", version.ref = "ssp" }
 roundedimageview = { group = "com.makeramen", name = "roundedimageview", version.ref = "roundedimageview" }
-firebase-bom = { module = "com.google.firebase:firebase-bom", version = "33.10.0" }
+firebase-bom = { module = "com.google.firebase:firebase-bom", version = "33.10.0" } # Note: Firebase BOM version might need update based on latest, but using provided one.
 firebase-messaging = { group = "com.google.firebase", name = "firebase-messaging", version.ref = "firebaseMessaging" }
 firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore", version.ref = "firebaseFirestore" }
 multidex = { group = "androidx.multidex", name = "multidex", version.ref = "multidex" }
+retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" } # Added Retrofit
+retrofit-converter-scalars = { group = "com.squareup.retrofit2", name = "converter-scalars", version.ref = "retrofit" } # Added Retrofit Scalars Converter
+
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 google-services = { id = "com.google.gms.google-services", version = "4.4.2" }
-
